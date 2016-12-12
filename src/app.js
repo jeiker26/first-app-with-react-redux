@@ -1,9 +1,15 @@
 import React from 'react';
 import ReactDom from 'react-dom';
 import Ecommerce from './components/ecommerce';
-import route from './modules/route';
+import configureStore from './configureStore';
+import { Provider } from 'react-redux';
 
-console.log(route(undefined, { type: 'XXX' }));
-console.log(route('catalog', { type: 'SET_ROUTE', route: 'cart' }));
+const store = configureStore();
 
-ReactDom.render(<Ecommerce />, document.getElementById('app'));
+window.store = store;
+
+ReactDom.render(
+    <Provider store={ store }>
+        <Ecommerce />
+    </Provider>
+    , document.getElementById('app'));
