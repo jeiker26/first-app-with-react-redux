@@ -1,6 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import Header from './header';
 import CartItem from './cart_item';
+import { connect } from 'react-redux';
+import { changeQuantity } from '../../modules/cart';
+import { goToCatalog, goToCheckout } from '../../modules/route';
 
 class Cart extends Component {
     constructor(props) {
@@ -10,16 +13,16 @@ class Cart extends Component {
     }
 
     handleBack(e) {
-        this.props.onNavigate('catalog');
+        this.props.goToCatalog();
     }
 
     handleCheckout(e) {
-        this.props.onNavigate('checkout');
+        this.props.goToCheckout();
     }
 
     render() {
         const cartItems = this.props.products.map(p =>
-            <CartItem key={ p.id } product={ p } onChangeQuantity={ this.props.onChangeQuantity }/>
+            <CartItem key={ p.id } product={ p } onChangeQuantity={ this.props.changeQuantity }/>
         );
 
         const total = this.props.products.reduce((acc, p) => {
@@ -62,8 +65,19 @@ class Cart extends Component {
 
 Cart.propTypes = {
     products: PropTypes.arrayOf(PropTypes.object),
-    onNavigate: PropTypes.func,
-    onChangeQuantity: PropTypes.func
+    changeQuantity: PropTypes.func,
+    goToCart: PropTypes.func,
+    goToCheckout: PropTypes.func
 };
 
-export default Cart;
+const mapStateToProps = state => ({
+    products: state.cart
+});
+
+const mapDispatchToProps = {
+    changeQuantity,
+    goToCatalog,
+    goToCheckout
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Cart);
